@@ -5,11 +5,11 @@ import MarketplaceABI from '../Marketplaceabi.json';
 import NFTABI from '../NFTABI.json';
 
 
-const REACT_APP_PRIVATEKEY="PRivatekey";
-const REACT_APP_NETWORK="Network";
-const REACT_APP_APIKEY="APIKEY";
-const REACT_APP_MARKETPLACE="MarketplaceAcontract";
-const REACT_APP_NFT="NFTContract";
+const REACT_APP_PRIVATEKEY=process.env.REACT_APP_PRIVATEKEY;
+const REACT_APP_NETWORK=process.env.REACT_APP_NETWORK;
+const REACT_APP_APIKEY=process.env.REACT_APP_APIKEY;
+const REACT_APP_MARKETPLACE=process.env.REACT_APP_MARKETPLACE;
+const REACT_APP_NFT=process.env.REACT_APP_NFT;
 
 const infuraProvider = new ethers.providers.InfuraProvider(
     REACT_APP_NETWORK,

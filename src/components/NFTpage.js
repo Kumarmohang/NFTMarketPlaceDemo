@@ -5,6 +5,8 @@ import MarketplaceJSON from "../Marketplace.json";
 import axios from "axios";
 import { useState } from "react";
 import { GetIpfsUrlFromPinata } from "../utils";
+import {NFTcontract,Marketcontract,Signer} from './Functions';
+const REACT_APP_NFT="0x6e6417f7a58B4870575b9c96FaaF3cd1b7b6D254";
 
 export default function NFTPage (props) {
 
@@ -16,20 +18,16 @@ const [currAddress, updateCurrAddress] = useState("0x");
 async function getNFTData(tokenId) {
     const ethers = require("ethers");
     //After adding your Hardhat network to your metamask, this code will get providers and signers
-    // const provider = new ethers.providers.Web3Provider(window.ethereum);
-    // const signer = provider.getSigner();
-    
-    const infuraProvider = new ethers.providers.InfuraProvider(
-        "goerli",
-        "4fade95fbf654443a119bb3a5c1f36c7",
-      );
-      const signer = new ethers.Wallet("0x621937a0781249e7500508995a1cf810823b1c31782fdc0319dc43209efd81be", infuraProvider);
-      console.log("singer is ",signer);
+    let signer = Signer();
+     
+    //Pull the deployed contract instance
+    let contract = Marketcontract();
+    let NFTContract = NFTcontract();
       const addr = await signer.getAddress();
     //Pull the deployed contract instance
-    let contract = new ethers.Contract(MarketplaceJSON.address, MarketplaceJSON.abi, signer)
+   
     //create an NFT Token
-    var tokenURI = await contract.tokenURI(tokenId);
+    var tokenURI = await NFTContract.tokenURI(tokenId);
     const listedToken = await contract.getListedTokenForId(tokenId);
     tokenURI = GetIpfsUrlFromPinata(tokenURI);
     let meta = await axios.get(tokenURI);
@@ -56,21 +54,17 @@ async function buyNFT(tokenId) {
     try {
         const ethers = require("ethers");
         //After adding your Hardhat network to your metamask, this code will get providers and signers
-        // const provider = new ethers.providers.Web3Provider(window.ethereum);
-        // const signer = provider.getSigner();
-        const infuraProvider = new ethers.providers.InfuraProvider(
-            "goerli",
-            "4fade95fbf654443a119bb3a5c1f36c7",
-          );
-          const signer = new ethers.Wallet("0x621937a0781249e7500508995a1cf810823b1c31782fdc0319dc43209efd81be", infuraProvider);
-          console.log("singer is ",signer);
+        let signer = Signer();
+     
+    //Pull the deployed contract instance
+    let contract = Marketcontract();
+    let NFTContract = NFTcontract();
+      const addr = await signer.getAddress();
 
-        //Pull the deployed contract instance
-        let contract = new ethers.Contract(MarketplaceJSON.address, MarketplaceJSON.abi, signer);
         const salePrice = ethers.utils.parseUnits(data.price, 'ether')
         updateMessage("Buying the NFT... Please Wait (Upto 5 mins)")
         //run the executeSale function
-        let transaction = await contract.executeSale(tokenId, {value:salePrice});
+        let transaction = await contract.createMarketSale(process.env.REACT_APP_NFT,tokenId, {value:salePrice});
         await transaction.wait();
 
         alert('You successfully bought the NFT!');

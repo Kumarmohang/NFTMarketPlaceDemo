@@ -7,7 +7,7 @@ import NFTABI from '../NFTABI.json';
 import { useLocation } from "react-router";
 import {Marketcontract,NFTcontract} from './Functions';
 
-const REACT_APP_NFT="0x6e6417f7a58B4870575b9c96FaaF3cd1b7b6D254";
+
 
 
 export default function SellNFT () {
@@ -119,7 +119,7 @@ export default function SellNFT () {
             listingPrice = listingPrice.toString()
             console.log("till Price APi is working fine");
             //actually create the NFT
-            let transaction = await MarketContract.createMarketItem(REACT_APP_NFT,tokenId, price, { value: listingPrice })
+            let transaction = await MarketContract.createMarketItem(process.env.REACT_APP_NFT,tokenId, price, { value: listingPrice })
             await transaction.wait()
             console.log("Successfully NFT completed",transaction);
 

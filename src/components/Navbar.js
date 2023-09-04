@@ -1,5 +1,6 @@
 import logo from '../logo_3.png';
 import fullLogo from '../full_logo.png';
+import {NFTcontract,Marketcontract,Signer} from './Functions';
 import {
   BrowserRouter as Router,
   Switch,
@@ -11,6 +12,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 
+
 function Navbar() {
 
 const [connected, toggleConnect] = useState(false);
@@ -21,12 +23,11 @@ async function getAddress() {
   const ethers = require("ethers");
   // const provider = new ethers.providers.Web3Provider(window.ethereum);
   // const signer = provider.getSigner();
-  const infuraProvider = new ethers.providers.InfuraProvider(
-    "goerli",
-    "4fade95fbf654443a119bb3a5c1f36c7",
-  );
-  const signer = new ethers.Wallet("0x621937a0781249e7500508995a1cf810823b1c31782fdc0319dc43209efd81be", infuraProvider);
-  console.log("singer is ",signer);
+  let signer = Signer();
+     
+  //Pull the deployed contract instance
+  let contract = Marketcontract();
+  let NFTContract = NFTcontract();
   const addr = await signer.getAddress();
   updateAddress(addr);
 }
