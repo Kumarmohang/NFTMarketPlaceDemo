@@ -27,7 +27,7 @@ export default function Profile () {
         let contract = Marketcontract();
 
         //create an NFT Token
-        let transaction = await contract.fetchItemsCreated()
+        let transaction = await contract.fetchMarketItems()
         console.log("transaction details is",transaction);
 
         /*

@@ -1,15 +1,30 @@
 /* ==========================
  =========== Register page form */
+.h1-my{
+  display: flex;
+    align-items: righ;
+    justify-content: right;
+    min-height: 2vh;
+}
+.h1-container{
+  display: flex;
+  align-items: right;
+  justify-content: right;
+  padding-inline-end: 30px;
+  background-image: linear-gradient(odeg, #ffdee9 0%, #b5fffc 100%);
+  
+}
 
  .form-contrainer {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 70vh;
+    min-height: 15vh;
     flex-direction: column;
     background-color: #ffdee9;
     background-image: linear-gradient(odeg, #ffdee9 0%, #b5fffc 100%);
   }
+  
   
   .form-contrainer form {
     box-shadow: rgba(0, 0, 0, 0.35);
@@ -27,6 +42,10 @@
     border: 1px solid;
     border-bottom: 1px solid #000;
     border-radius: 0;
+  }
+  .form-contrainer form label {
+    align-items: left;
+    
   }
 
 
