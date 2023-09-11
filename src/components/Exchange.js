@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from "react";
 import "../AuthStyle.css";
 import { ethers } from "ethers";
+import Navbar from "./Navbar";
 
 import {Marketcontract,Signer,Provider} from './Functions';
 const URL ="https://goerli.etherscan.io/tx/"
@@ -92,11 +93,12 @@ const ExChangeEth =async(e)=>{
     <>
     {/* <h2 className="h2-container">1 Eth=100 Loyalty Tokens</h2> */}
     <br/>
-    <h1 className="h1-container">Wallet Bal : {balance}</h1>
-    <h2  className="h1-container">My Loyalty Balance: {mytokenbalance}</h2>
-    <h1 className="h1-my"> contract Eth balance : {contractBalance} </h1>
+    <Navbar></Navbar>
+    <h2 className="text-lg border-b-2 hover:pb-0 p-2 ">Wallet Bal : {balance}</h2>
+    <h2  className="border-b-2 hover:pb-0 p-2">My Loyalty Balance: {mytokenbalance}</h2>
+    <h2 className="border-b-2 hover:pb-0 p-2"> contract Eth balance : {contractBalance} </h2>
       <div className="form-contrainer">
-        <h1 className=".h2-container">1 Eth = 100 Loyalty Tokens </h1>
+        <h1 className="h2-container ">1 Eth = 100 Loyalty Tokens </h1>
         <form >
         <table >
             <tr>

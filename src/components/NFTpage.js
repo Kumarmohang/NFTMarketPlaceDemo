@@ -64,7 +64,7 @@ async function buyNFT(tokenId) {
         const salePrice = ethers.utils.parseUnits(data.price, 'ether')
         updateMessage("Buying the NFT... Please Wait (Upto 5 mins)")
         //run the executeSale function
-        let transaction = await contract.createMarketSale(process.env.REACT_APP_NFT,tokenId, {value:salePrice});
+        let transaction = await contract.createMarketSale(REACT_APP_NFT,tokenId, {value:salePrice});
         await transaction.wait();
 
         alert('You successfully bought the NFT!');
