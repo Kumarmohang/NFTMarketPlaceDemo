@@ -7,11 +7,12 @@ import NFTABI from '../NFTABI.json';
 import { useLocation } from "react-router";
 import {Marketcontract,NFTcontract} from './Functions';
 
-
+const REACT_APP_NFT="0x6e6417f7a58B4870575b9c96FaaF3cd1b7b6D254"
 
 
 export default function SellNFT () {
     const [formParams, updateFormParams] = useState({ name: '', description: '', price: ''});
+    const [partner,updatePartner]=useState("");
     const [fileURL, setFileURL] = useState(null);
     const ethers = require("ethers");
     const [message, updateMessage] = useState('');
@@ -119,7 +120,7 @@ export default function SellNFT () {
             listingPrice = listingPrice.toString()
             console.log("till Price APi is working fine");
             //actually create the NFT
-            let transaction = await MarketContract.createMarketItem(process.env.REACT_APP_NFT,tokenId, price, { value: listingPrice })
+            let transaction = await MarketContract.createMarketItem(REACT_APP_NFT,tokenId,partner, price, { value: listingPrice })
             await transaction.wait()
             console.log("Successfully NFT completed",transaction);
 
@@ -149,6 +150,10 @@ export default function SellNFT () {
                 <div className="mb-6">
                     <label className="block text-purple-500 text-sm font-bold mb-2" htmlFor="description">NFT Description</label>
                     <textarea className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" cols="40" rows="5" id="description" type="text" placeholder="Axie Infinity Collection" value={formParams.description} onChange={e => updateFormParams({...formParams, description: e.target.value})}></textarea>
+                </div>
+                <div className="mb-4">
+                    <label className="block text-purple-500 text-sm font-bold mb-2" htmlFor="partner">Partner Address</label>
+                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="partner" type="text" placeholder="Eth Address" onChange={e => updatePartner(e.target.value)} value={partner}></input>
                 </div>
                 <div className="mb-6">
                     <label className="block text-purple-500 text-sm font-bold mb-2" htmlFor="price">Price (in ETH)</label>
