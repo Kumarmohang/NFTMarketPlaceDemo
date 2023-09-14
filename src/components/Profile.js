@@ -1,11 +1,11 @@
 import Navbar from "./Navbar";
-import { useLocation, useParams } from 'react-router-dom';
-import MarketplaceJSON from "../Marketplace.json";
+import {  useParams } from 'react-router-dom';
+import MarketplaceABI from '../Marketplaceabi.json';
+import NFTABI from '../NFTABI.json';
 import axios from "axios";
 import { useState } from "react";
 import NFTTile from "./NFTTile";
 
-import {NFTcontract,Marketcontract,Signer} from './Functions';
 
 export default function Profile () {
     const [data, updateData] = useState([]);
@@ -14,20 +14,30 @@ export default function Profile () {
     const [totalPrice, updateTotalPrice] = useState("0");
 
     async function getNFTData(tokenId) {
-        const ethers = require("ethers");
+        
         let sumPrice = 0;
-        //After adding your Hardhat network to your metamask, this code will get providers and signers
-        // const provider = new ethers.providers.Web3Provider(window.ethereum);
-        let signer=Signer();
-        // const signer = provider.getSigner();
-        const addr = await signer.getAddress();
-        updateAddress(addr);
+        const ethers = require("ethers");
+                if (window.ethereum) {
+                    window.ethereum.on("chainChanged", () => {
+                      window.location.reload();
+                  });
+                    window.ethereum.on("accountsChanged", () => {
+                      window.location.reload();
+                  });
+              }
+              const provider = new ethers.providers.Web3Provider(window.ethereum);
+              await provider.send("eth_requestAccounts", []);
+              const signer = provider.getSigner();
+              const addr = await signer.getAddress();
+              console.log('Signer', signer, 'addr', addr);
+                
+                //Pull the deployed contract instance
+                let NFTContract = new ethers.Contract(process.env.REACT_APP_NFT,NFTABI,signer);
+                let MarketContract = new ethers.Contract(process.env.REACT_APP_MARKETPLACE,MarketplaceABI,signer);
 
-        //Pull the deployed contract instance
-        let contract = Marketcontract();
 
         //create an NFT Token
-        let transaction = await contract.fetchMarketItems()
+        let transaction = await MarketContract.fetchMarketItems()
         console.log("transaction details is",transaction);
 
         /*
@@ -36,7 +46,7 @@ export default function Profile () {
         */
         
         const items = await Promise.all(transaction.map(async i => {
-            let NFTContract = NFTcontract();
+            
             const tokenURI = await NFTContract.tokenURI(i.tokenId);
             let meta = await axios.get(tokenURI);
             meta = meta.data;

@@ -2,10 +2,14 @@ import React, { useState,useEffect } from "react";
 import "../AuthStyle.css";
 import { ethers } from "ethers";
 import Navbar from "./Navbar";
+import MarketplaceABI from '../Marketplaceabi.json';
 
-import {Marketcontract,Signer,Provider} from './Functions';
+
+
 const URL ="https://goerli.etherscan.io/tx/"
-
+let signer;
+let provider;
+let MarketContract;
 const Exchange = () => {
   const [token, setToken] = useState("");
   const [eth, setEth] = useState("");
@@ -23,21 +27,35 @@ const Exchange = () => {
   } );
 
 async function details(){
-    let signer=Signer();
-    const addr = await signer.getAddress();
-        setAddress(addr);
-        
-        let provider =Provider();
+
+    const ethers = require("ethers");
+                if (window.ethereum) {
+                    window.ethereum.on("chainChanged", () => {
+                      window.location.reload();
+                  });
+                    window.ethereum.on("accountsChanged", () => {
+                      window.location.reload();
+                  });
+              }
+               provider = new ethers.providers.Web3Provider(window.ethereum);
+              await provider.send("eth_requestAccounts", []);
+               signer = provider.getSigner();
+              const addr = await signer.getAddress();
+              console.log('Signer', signer, 'addr', addr);
+              setAddress(addr);
+               
+         MarketContract = new ethers.Contract(process.env.REACT_APP_MARKETPLACE,MarketplaceABI,signer);  
         const bala =  await provider.getBalance(address);
        let one = ethers.utils.formatEther(bala);
-       const addressBal =  await provider.getBalance("0x8DdE6FdcF02288959069b2aEE19f33aC8172cdAD");
+       const addressBal =  await provider.getBalance(process.env.REACT_APP_MARKETPLACE);
+    
        let addBalance = ethers.utils.formatEther(addressBal)
        setbalance(one);
        setcontractBalance(addBalance);
-       let MP= Marketcontract();
-       let tokenBal= await MP.balanceOf(address);
-       let tokenBalance = ethers.utils.formatEther(addressBal)
+       let tokenBal= await MarketContract.balanceOf(address);
+       let tokenBalance = ethers.utils.formatEther(tokenBal)
        setmytokenbalance(tokenBalance)
+       
        
         
 
@@ -45,8 +63,8 @@ async function details(){
 
   async function Buy(e) {
     e.preventDefault();
-    let MP= Marketcontract();
-    let signer=Signer();
+    
+    
         // const signer = provider.getSigner();
         const addr = await signer.getAddress();
         setAddress(addr);
@@ -57,7 +75,7 @@ async function details(){
     console.log("value si",_value)
     
     try{
-        const tx = await MP.BuyRewardTokes({ value: _value });
+        const tx = await MarketContract.BuyRewardTokes({ value: _value });
     await tx.wait();
     const hash = tx.hash;
     console.log("tx hash is ",hash);
@@ -72,14 +90,14 @@ async function details(){
 const ExChangeEth =async(e)=>{
     e.preventDefault();
     try{
-        let MP =Marketcontract();
+        
         // const amount= eth*10**18;
         // ethers.utils.parseUnits(nft.price.toString(), 'ether');
         console.log("ether ",selltoken)
     // const _value=ethers.utils.parseEther(selleth.toString());
     const _value=ethers.utils.parseUnits(selleth.toString(), 'ether');
     console.log("value si",_value)
-        const tx = await MP.ExchangeRewardTokenWithEth(_value);
+        const tx = await MarketContract.ExchangeRewardTokenWithEth(_value);
     await tx.wait();
     const hash = tx.hash;
     console.log("tx hash is ",hash);

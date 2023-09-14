@@ -1,22 +1,17 @@
 import Navbar from "./Navbar";
 import { useState } from "react";
 import { uploadFileToIPFS, uploadJSONToIPFS } from "../pinata";
-import Marketplace from '../Marketplace.json';
 import MarketplaceABI from '../Marketplaceabi.json';
 import NFTABI from '../NFTABI.json';
-import { useLocation } from "react-router";
-import {Marketcontract,NFTcontract} from './Functions';
 
-const REACT_APP_NFT="0x6e6417f7a58B4870575b9c96FaaF3cd1b7b6D254"
 
 
 export default function SellNFT () {
     const [formParams, updateFormParams] = useState({ name: '', description: '', price: ''});
     const [partner,updatePartner]=useState("");
     const [fileURL, setFileURL] = useState(null);
-    const ethers = require("ethers");
+
     const [message, updateMessage] = useState('');
-    const location = useLocation();
 
     async function disableButton() {
         const listButton = document.getElementById("list-button")
@@ -90,13 +85,26 @@ export default function SellNFT () {
             const metadataURL = await uploadMetadataToIPFS();
             if(metadataURL === -1)
                 return;
-            //After adding your Hardhat network to your metamask, this code will get providers and signers
-            // const provider = new ethers.providers.Web3Provider(window.ethereum);
-            // const signer = provider.getSigner();
-            let NFTContract = NFTcontract();
+                const ethers = require("ethers");
+                if (window.ethereum) {
+                    window.ethereum.on("chainChanged", () => {
+                      window.location.reload();
+                  });
+                    window.ethereum.on("accountsChanged", () => {
+                      window.location.reload();
+                  });
+              }
+              const provider = new ethers.providers.Web3Provider(window.ethereum);
+              await provider.send("eth_requestAccounts", []);
+              const signer = provider.getSigner();
+              const addr = await signer.getAddress();
+              console.log('Signer', signer, 'addr', addr);
+                
+                //Pull the deployed contract instance
+                let NFTContract = new ethers.Contract(process.env.REACT_APP_NFT,NFTABI,signer);
+                let MarketContract = new ethers.Contract(process.env.REACT_APP_MARKETPLACE,MarketplaceABI,signer);
+            // let MarketContract = Marketcontract();
             console.log("NFT contract is",NFTContract);
-            
-            let MarketContract = Marketcontract();
             console.log("contract details is",MarketContract);
             disableButton();
             updateMessage("Uploading NFT(takes 5 mins).. please dont click anything!");
@@ -105,6 +113,7 @@ export default function SellNFT () {
 
             let NFTtx = await NFTContract.createToken(metadataURL);
             let tx = await NFTtx.wait();
+            console.log("NFT tx",tx)
             let event = tx.events[0];
             let value = event.args[2];
             let tokenId = value.toNumber();
@@ -119,8 +128,9 @@ export default function SellNFT () {
             let listingPrice = await MarketContract.getListingPrice()
             listingPrice = listingPrice.toString()
             console.log("till Price APi is working fine");
+            console.log("eth address",partner);
             //actually create the NFT
-            let transaction = await MarketContract.createMarketItem(REACT_APP_NFT,tokenId,partner, price, { value: listingPrice })
+            let transaction = await MarketContract.createMarketItem(process.env.REACT_APP_NFT,tokenId,partner, price, { value: listingPrice })
             await transaction.wait()
             console.log("Successfully NFT completed",transaction);
 

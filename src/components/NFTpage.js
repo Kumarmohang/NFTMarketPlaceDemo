@@ -1,7 +1,8 @@
 import Navbar from "./Navbar";
 import axie from "../tile.jpeg";
 import { useLocation, useParams } from 'react-router-dom';
-import MarketplaceJSON from "../Marketplace.json";
+import MarketplaceABI from '../Marketplaceabi.json';
+import NFTABI from '../NFTABI.json';
 import axios from "axios";
 import { useState } from "react";
 import { GetIpfsUrlFromPinata } from "../utils";
@@ -17,18 +18,28 @@ const [currAddress, updateCurrAddress] = useState("0x");
 
 async function getNFTData(tokenId) {
     const ethers = require("ethers");
-    //After adding your Hardhat network to your metamask, this code will get providers and signers
-    let signer = Signer();
-     
-    //Pull the deployed contract instance
-    let contract = Marketcontract();
-    let NFTContract = NFTcontract();
-      const addr = await signer.getAddress();
+                if (window.ethereum) {
+                    window.ethereum.on("chainChanged", () => {
+                      window.location.reload();
+                  });
+                    window.ethereum.on("accountsChanged", () => {
+                      window.location.reload();
+                  });
+              }
+              const provider = new ethers.providers.Web3Provider(window.ethereum);
+              await provider.send("eth_requestAccounts", []);
+              const signer = provider.getSigner();
+              const addr = await signer.getAddress();
+              console.log('Signer', signer, 'addr', addr);
+                
+                //Pull the deployed contract instance
+                let NFTContract = new ethers.Contract(process.env.REACT_APP_NFT,NFTABI,signer);
+                let MarketContract = new ethers.Contract(process.env.REACT_APP_MARKETPLACE,MarketplaceABI,signer);
     //Pull the deployed contract instance
    
     //create an NFT Token
     var tokenURI = await NFTContract.tokenURI(tokenId);
-    const listedToken = await contract.getListedTokenForId(tokenId);
+    const listedToken = await MarketContract.getListedTokenForId(tokenId);
     tokenURI = GetIpfsUrlFromPinata(tokenURI);
     let meta = await axios.get(tokenURI);
     meta = meta.data;

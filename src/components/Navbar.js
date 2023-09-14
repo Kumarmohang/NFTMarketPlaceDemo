@@ -1,6 +1,5 @@
-import logo from '../logo_3.png';
-import fullLogo from '../full_logo.png';
-import {NFTcontract,Marketcontract,Signer} from './Functions';
+
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -21,14 +20,18 @@ const [currAddress, updateAddress] = useState('0x');
 
 async function getAddress() {
   const ethers = require("ethers");
-  // const provider = new ethers.providers.Web3Provider(window.ethereum);
-  // const signer = provider.getSigner();
-  let signer = Signer();
-     
-  //Pull the deployed contract instance
-  let contract = Marketcontract();
-  let NFTContract = NFTcontract();
-  const addr = await signer.getAddress();
+                if (window.ethereum) {
+                    window.ethereum.on("chainChanged", () => {
+                      window.location.reload();
+                  });
+                    window.ethereum.on("accountsChanged", () => {
+                      window.location.reload();
+                  });
+              }
+              const provider = new ethers.providers.Web3Provider(window.ethereum);
+              await provider.send("eth_requestAccounts", []);
+              const signer = provider.getSigner();
+              const addr = await signer.getAddress();
   updateAddress(addr);
 }
 
@@ -42,16 +45,21 @@ function updateButton() {
 }
 
 async function connectWebsite() {
+    if (window.ethereum) {
+      window.ethereum.on("chainChanged", () => {
+        window.location.reload();
+    });
+      window.ethereum.on("accountsChanged", () => {
+        window.location.reload();
+    });
+}
+const ethers = require("ethers");
+const provider = new ethers.providers.Web3Provider(window.ethereum);
+await provider.send("eth_requestAccounts", []);
+const signer = provider.getSigner();
+const addr = await signer.getAddress();
+updateAddress(addr);
 
-    const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-    if(chainId !== '0x5')
-    {
-      //alert('Incorrect network! Switch your metamask network to Rinkeby');
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x5' }],
-     })
-    }  
     await window.ethereum.request({ method: 'eth_requestAccounts' })
       .then(() => {
         updateButton();
