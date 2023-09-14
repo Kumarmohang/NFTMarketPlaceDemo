@@ -1,14 +1,13 @@
 import Navbar from "./Navbar";
-import axie from "../tile.jpeg";
-import { useLocation, useParams } from 'react-router-dom';
+import {  useParams } from 'react-router-dom';
 import MarketplaceABI from '../Marketplaceabi.json';
 import NFTABI from '../NFTABI.json';
 import axios from "axios";
 import { useState } from "react";
 import { GetIpfsUrlFromPinata } from "../utils";
-import {NFTcontract,Marketcontract,Signer} from './Functions';
-const REACT_APP_NFT="0x6e6417f7a58B4870575b9c96FaaF3cd1b7b6D254";
 
+
+let signer;
 export default function NFTPage (props) {
 
 const [data, updateData] = useState({});
@@ -64,18 +63,19 @@ async function getNFTData(tokenId) {
 async function buyNFT(tokenId) {
     try {
         const ethers = require("ethers");
-        //After adding your Hardhat network to your metamask, this code will get providers and signers
-        let signer = Signer();
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+              await provider.send("eth_requestAccounts", []);
+               signer = provider.getSigner();
+              const addr = await signer.getAddress();
+              console.log('Signer', signer, 'addr', addr);
      
-    //Pull the deployed contract instance
-    let contract = Marketcontract();
-    let NFTContract = NFTcontract();
-      const addr = await signer.getAddress();
+    
+       let MarketContract = new ethers.Contract(process.env.REACT_APP_MARKETPLACE,MarketplaceABI,signer);
 
         const salePrice = ethers.utils.parseUnits(data.price, 'ether')
         updateMessage("Buying the NFT... Please Wait (Upto 5 mins)")
         //run the executeSale function
-        let transaction = await contract.createMarketSale(REACT_APP_NFT,tokenId, {value:salePrice});
+        let transaction = await MarketContract.createMarketSale(process.env.REACT_APP_NFT,tokenId, {value:salePrice});
         await transaction.wait();
 
         alert('You successfully bought the NFT!');
