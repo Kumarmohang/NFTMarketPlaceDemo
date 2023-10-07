@@ -131,14 +131,19 @@ export default function SellNFT () {
             console.log("eth address",partner);
             //actually create the NFT
             let transaction = await MarketContract.createMarketItem(process.env.REACT_APP_NFT,tokenId,partner, price, { value: listingPrice })
-            await transaction.wait()
+            let ktx = await transaction.wait()
+            console.log("tx is ",ktx);
+            let even = ktx.events[1];
+            console.log("events are",even);
+            // let amount= even[3];
+
             console.log("Successfully NFT completed",transaction);
 
             alert("Successfully listed your NFT!");
             enableButton();
             updateMessage("");
             updateFormParams({ name: '', description: '', price: ''});
-            // window.location.replace("/")
+            window.location.replace("/")
         }
         catch(e) {
             console.log(e)

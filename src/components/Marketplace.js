@@ -34,6 +34,7 @@ async function getAllNFTs() {
     let NFTContract = new ethers.Contract(process.env.REACT_APP_NFT,NFTABI,signer);
     let contract = new ethers.Contract(process.env.REACT_APP_MARKETPLACE,MarketplaceABI,signer);
     //create an NFT Token
+    console.log("befroe tx")
     let transaction = await contract.fetchMarketItems()
     console.log("transaction details ",transaction);
 

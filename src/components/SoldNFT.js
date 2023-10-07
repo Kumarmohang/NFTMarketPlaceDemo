@@ -7,7 +7,7 @@ import { useState } from "react";
 import NFTTile from "./NFTTile";
 
 
-export default function Profile () {
+export default function SoldNFT () {
     const [data, updateData] = useState([]);
     const [dataFetched, updateFetched] = useState(false);
     const [address, updateAddress] = useState("0x");
@@ -39,7 +39,8 @@ export default function Profile () {
 
 
         //create an NFT Token
-        let transaction = await MarketContract.fetchItemsCreated()
+        let transaction = await MarketContract.SoldNFT();
+    
         console.log("transaction details is",transaction);
 
         /*
@@ -83,21 +84,13 @@ export default function Profile () {
         <div className="profileClass" style={{"min-height":"100vh"}}>
             <Navbar></Navbar>
             <div className="profileClass">
-            <div className="flex text-center flex-col mt-11 md:text-2xl text-white">
-                <div className="mb-5">
-                    <h2 className="font-bold">Wallet Address</h2>  
-                    {address}
-                </div>
-            </div>
+           
             <div className="flex flex-row text-center justify-center mt-10 md:text-2xl text-white">
                     <div>
-                        <h2 className="font-bold">No. of NFTs</h2>
+                        <h2 className="font-bold">No. of NFTs are Sold from this Platform</h2>
                         {data.length}
                     </div>
-                    <div className="ml-20">
-                        <h2 className="font-bold">Total Value</h2>
-                        {totalPrice} ETH
-                    </div>
+                    
             </div>
             <div className="flex flex-col text-center items-center mt-11 text-white">
                 <h2 className="font-bold">Your NFTs</h2>
@@ -107,7 +100,7 @@ export default function Profile () {
                     })}
                 </div>
                 <div className="mt-10 text-xl">
-                    {data.length == 0 ? "Oops, No NFT data to display (Are you logged in?)":""}
+                    {data.length == 0 ? "Oops, No NFT Sold yet":""}
                 </div>
             </div>
             </div>

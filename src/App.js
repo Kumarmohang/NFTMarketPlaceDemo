@@ -4,6 +4,7 @@ import Marketplace from './components/Marketplace';
 import Profile from './components/Profile';
 import SellNFT from './components/SellNFT';
 import NFTPage from './components/NFTpage';
+import SoldNFT from './components/SoldNFT';
 import ReactDOM from "react-dom/client";
 import Exchange from './components/Exchange';
 import {
@@ -18,7 +19,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Marketplace />}/>
           <Route path="/exchange" element={<Exchange />}/>   
-          <Route path="/nftPage" element={<NFTPage />}/>        
+          <Route path="/nftPage" element={<NFTPage />}/> 
+          <Route path="/sold" element={<SellNFT />}/>          
           <Route path="/profile" element={<Profile />}/>
           <Route path="/sellNFT" element={<SellNFT />}/>             
         </Routes>

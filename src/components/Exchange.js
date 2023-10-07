@@ -6,7 +6,7 @@ import MarketplaceABI from '../Marketplaceabi.json';
 
 
 
-const URL ="https://goerli.etherscan.io/tx/"
+const URL ="https://mumbai.polygonscan.com/tx/"
 let signer;
 let provider;
 let MarketContract;
@@ -81,6 +81,7 @@ async function details(){
     console.log("tx hash is ",hash);
     console.log(URL+hash);
     console.log("ethe transaction completed successfully",tx);
+    alert(`Exchange transaction completed successfully ${URL+hash}`)
     } catch(error){
         console.log("Error",error);
     }
@@ -103,6 +104,7 @@ const ExChangeEth =async(e)=>{
     console.log("tx hash is ",hash);
     console.log(URL+hash);
     console.log("Exchange transaction completed successfully",tx);
+    alert(`Exchange transaction completed successfully ${URL+hash}`)
     } catch(error){
         console.log("Error",error);
     }

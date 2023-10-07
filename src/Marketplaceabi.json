@@ -143,13 +143,78 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "RewardToken",
-		"outputs": [
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_nftContract",
+				"type": "address"
+			},
 			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "itemId",
 				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_price",
+				"type": "uint256"
+			}
+		],
+		"name": "RelistNFT",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "SoldNFT",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "itemId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "nftContract",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address payable",
+						"name": "seller",
+						"type": "address"
+					},
+					{
+						"internalType": "address payable",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "partners",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "sold",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct NFTMarket.MarketItem[]",
+				"name": "",
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",
@@ -233,6 +298,11 @@
 				"internalType": "uint256",
 				"name": "tokenId",
 				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "_partners",
+				"type": "address"
 			},
 			{
 				"internalType": "uint256",
@@ -332,6 +402,11 @@
 						"type": "address"
 					},
 					{
+						"internalType": "address",
+						"name": "partners",
+						"type": "address"
+					},
+					{
 						"internalType": "uint256",
 						"name": "price",
 						"type": "uint256"
@@ -382,6 +457,11 @@
 						"type": "address"
 					},
 					{
+						"internalType": "address",
+						"name": "partners",
+						"type": "address"
+					},
+					{
 						"internalType": "uint256",
 						"name": "price",
 						"type": "uint256"
@@ -429,6 +509,11 @@
 					{
 						"internalType": "address payable",
 						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "partners",
 						"type": "address"
 					},
 					{
@@ -485,6 +570,11 @@
 					{
 						"internalType": "address payable",
 						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "partners",
 						"type": "address"
 					},
 					{

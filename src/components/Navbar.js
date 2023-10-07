@@ -64,8 +64,9 @@ updateAddress(addr);
       .then(() => {
         updateButton();
         console.log("here");
-        getAddress();
-        window.location.replace(location.pathname)
+        // getAddress();
+        
+        // window.location.replace(location.pathname)
       });
 }
 
@@ -77,13 +78,15 @@ updateAddress(addr);
     {
       console.log("here");
       getAddress();
+      console.log("its working after the get address")
       toggleConnect(val);
       updateButton();
     }
 
-    window.ethereum.on('accountsChanged', function(accounts){
-      window.location.replace(location.pathname)
-    })
+    // window.ethereum.on('accountsChanged', function(accounts){
+    //   window.location.replace(location.pathname)
+    // })
+    console.log("at end")
   });
 
     return (
@@ -111,11 +114,20 @@ updateAddress(addr);
               }
               {location.pathname === "/sellNFT" ? 
               <li className='border-b-2 hover:pb-0 p-2'>
-                <Link to="/sellNFT">List My NFT</Link>
+                <Link to="/sellNFT">Create An NFT</Link>
               </li>
               :
               <li className='hover:border-b-2 hover:pb-0 p-2'>
-                <Link to="/sellNFT">List My NFT</Link>
+                <Link to="/sellNFT">Create An NFT</Link>
+              </li>              
+              }
+              {location.pathname === "/sold" ? 
+              <li className='border-b-2 hover:pb-0 p-2'>
+                <Link to="/sold">Sold NFT</Link>
+              </li>
+              :
+              <li className='hover:border-b-2 hover:pb-0 p-2'>
+                <Link to="/sold">Sold NFT</Link>
               </li>              
               }              
               {location.pathname === "/profile" ? 
